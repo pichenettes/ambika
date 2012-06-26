@@ -1,0 +1,36 @@
+C: change program
+long press on C: enable/disable program change on C
+
+
+4/ Drummer (logotone: C C C CC C)
+
+Accelerometer hit: Play C1
+Accelerometer hit + Z: Play D1
+
+
+5/ Controller (C with modulations)
+
+joystick DOWN/UP: CTRL1
+joystick LEFT/RIGHT: CTRL2
+Z + joystick DOWN/UP: CTRL3
+Z + joystick LEFT/RIGHT: CTRL4
+
+
+6/ Firestarter
+
+joystick DOWN/UP: Cutoff drive
+joystick LEFT/RIGHT: Resonance drive
+Z: start
+Z + joystick DOWN/UP: transpose +/- 2
+Z + joystick LEFT/RIGHT: transpose +/- 1
+
+
+2/ Navigator (logotone: C G C)
+
+Z: play note. On release: make current note center note
+Z + joystick DOWN/UP: note +/- 7 12
+Z + joystick LEFT/RIGHT: note +/- 2 9
+
+Accelerometer hit: play current note
+
+
