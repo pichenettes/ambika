@@ -82,6 +82,7 @@ ISR(TIMER2_OVF_vect) {
   voicecard_rx.Receive();
 }
 
+// This GPIO is used during development for timing code.
 Gpio<PortD, 7> timing_signal;
 
 inline void Init() {
@@ -100,7 +101,6 @@ inline void Init() {
   vcf_mode.set_mode(DIGITAL_OUTPUT);
 
   voicecard_rx.Init();
-  timing_signal.set_mode(DIGITAL_OUTPUT);
   voice.Init();
   
   log_vca.set_mode(DIGITAL_INPUT);
@@ -135,12 +135,10 @@ int main(void) {
     // Check if there's a block of samples to fill.
     if (audio_buffer.writable() >= kAudioBlockSize) {
       voicecard_rx.TickRxLed();
-      timing_signal.Low();
       voice.ProcessBlock();
       vcf_cutoff_out.Write(voice.cutoff());
       vcf_resonance_out.Write(voice.resonance());
       vcf_mode.Write(filter_mode_bytes[voice.patch().filter[0].mode]);
-      timing_signal.High();
       update_vca = 1;
     }
     voicecard_rx.Process();
