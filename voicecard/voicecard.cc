@@ -43,7 +43,6 @@ PwmOutput<kPinVcaOut> vca_out;
 ParallelPort<PortC, PARALLEL_TRIPLE_LOW> vcf_mode;
 
 Gpio<PortB, 0> log_vca;
-Gpio<PortB, 1> inverted_resonance;
 
 UartSpiMaster<UartSpiPort0, Gpio<PortD, 2>, 2> dac_interface;
 
@@ -106,9 +105,6 @@ inline void Init() {
   
   log_vca.set_mode(DIGITAL_INPUT);
   log_vca.High();
-  inverted_resonance.set_mode(DIGITAL_INPUT);
-  inverted_resonance.High();
-  
   dac_interface.Strobe();
   dac_interface.Overwrite(0x10 | 0x0f);
   dac_interface.Overwrite(0xff);
@@ -142,11 +138,7 @@ int main(void) {
       timing_signal.Low();
       voice.ProcessBlock();
       vcf_cutoff_out.Write(voice.cutoff());
-      if (inverted_resonance.is_low()) {
-        vcf_resonance_out.Write(~voice.resonance());
-      } else {
-        vcf_resonance_out.Write(voice.resonance());
-      }
+      vcf_resonance_out.Write(voice.resonance());
       vcf_mode.Write(filter_mode_bytes[voice.patch().filter[0].mode]);
       timing_signal.High();
       update_vca = 1;
