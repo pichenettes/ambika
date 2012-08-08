@@ -24,10 +24,14 @@
 namespace ambika {
   
 void VoiceAllocator::Clear() {
-  memset(&pool_, 0, sizeof(pool_));
+  ClearNotes();
   for (uint8_t i = 0; i < kMaxPolyphony; ++i) {
     lru_[i] = kMaxPolyphony - i - 1;
   }
+}
+
+void VoiceAllocator::ClearNotes() {
+  memset(&pool_, 0, sizeof(pool_));
 }
 
 uint8_t VoiceAllocator::NoteOn(uint8_t note) {

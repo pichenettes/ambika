@@ -492,8 +492,8 @@ void Part::Aftertouch(uint8_t velocity) {
 }
 
 void Part::AllSoundOff() {
-  mono_allocator_.Clear();
   poly_allocator_.Clear();
+  mono_allocator_.Clear();
   pressed_keys_.Clear();
   for (uint8_t i = 0; i < num_allocated_voices_; ++i) {
     voicecard_tx.Kill(allocated_voices_[i]);
@@ -501,8 +501,8 @@ void Part::AllSoundOff() {
 }
 
 void Part::AllNotesOff() {
+  poly_allocator_.ClearNotes();
   mono_allocator_.Clear();
-  poly_allocator_.Clear();
   pressed_keys_.Clear();
   for (uint8_t i = 0; i < num_allocated_voices_; ++i) {
     voicecard_tx.Release(allocated_voices_[i]);
