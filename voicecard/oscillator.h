@@ -111,8 +111,12 @@ class Oscillator {
         RenderBandlimitedPwm(buffer);
       }
     } else {
-      RenderFn fn = fn_table_[
-          shape_ >= WAVEFORM_WAVETABLE_1 ? WAVEFORM_WAVETABLE_1 : shape_];
+      RenderFn fn;
+      
+      uint8_t index = shape_ >= WAVEFORM_WAVETABLE_1
+          ? WAVEFORM_WAVETABLE_1
+          : shape_;
+      ResourcesManager::Load(fn_table_, index, &fn);
       if (shape_ == WAVEFORM_WAVEQUENCE) {
         fn = &Oscillator::RenderWavequence;
       }
