@@ -110,30 +110,43 @@ class MidiDispatcher : public midi::MidiDevice {
   
   static void ProgramChange(uint8_t channel, uint8_t program) {
     if (system_settings.rx_program_change()) {
-      if (current_bank_ < 26) {
-        for (uint8_t i = 0; i < kNumParts; ++i) {
-          if (multi.data().part_mapping_[i].receive_channel(channel)) {
-            StorageLocation* location = Library::mutable_location();
-            location->object = STORAGE_OBJECT_PROGRAM;
-            location->name = NULL;  // We don't want to load the name.
-            location->part = i;
-            location->bank = current_bank_;
-            location->slot = program;
-            storage.Load(*location);
+      for (uint8_t retry = 0; retry < 2; ++retry) {
+        bool error = false;
+        if (current_bank_ < 26) {
+          for (uint8_t i = 0; i < kNumParts; ++i) {
+            if (multi.data().part_mapping_[i].receive_channel(channel)) {
+              StorageLocation* location = Library::mutable_location();
+              location->object = STORAGE_OBJECT_PROGRAM;
+              location->name = NULL;  // We don't want to load the name.
+              location->part = i;
+              location->bank = current_bank_;
+              location->slot = program;
+              if (!error) {
+                error = error | (storage.Load(*location) != FS_OK);
+                if (!error) {
+                  Library::SaveLocation();
+                }
+              }
+            }
+          }
+        } else {
+          StorageLocation* location = Library::mutable_location();
+          location->object = STORAGE_OBJECT_MULTI;
+          location->name = NULL;  // We don't want to load the name.
+          location->part = 0;
+          location->bank = current_bank_ - 26;
+          location->slot = program;
+          error = error | (storage.Load(*location) != FS_OK);
+          if (!error) {
             Library::SaveLocation();
           }
         }
-      } else {
-        StorageLocation* location = Library::mutable_location();
-        location->object = STORAGE_OBJECT_MULTI;
-        location->name = NULL;  // We don't want to load the name.
-        location->part = 0;
-        location->bank = current_bank_ - 26;
-        location->slot = program;
-        storage.Load(*location);
-        Library::SaveLocation();
+        if (!error) {
+          Library::set_name_dirty();
+          break;
+        }
+        Storage::InitFilesystem();
       }
-      Library::set_name_dirty();
     }
   }
   
