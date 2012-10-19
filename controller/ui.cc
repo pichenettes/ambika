@@ -287,6 +287,8 @@ void Ui::ShowPageRelative(int8_t increment) {
   }
 }
 
+const prog_uint8_t part_leds_remap[] PROGMEM = { 0, 3, 1, 4, 2, 5 };
+
 /* static */
 void Ui::DoEvents() {
   display.Tick();
@@ -354,10 +356,14 @@ void Ui::DoEvents() {
   }
   
   leds.Clear();
-  leds.set_pixel(LED_PART_1 + state_.active_part, 0xf0);
+  leds.set_pixel(
+      LED_PART_1 + pgm_read_byte(part_leds_remap + state_.active_part), 0xf0);
   for (uint8_t i = 0; i < kNumVoices; ++i) {
+    uint8_t led_index = pgm_read_byte(part_leds_remap + i);
     uint8_t velocity = voicecard_tx.voice_status(i) >> 3;
-    leds.set_pixel(LED_PART_1 + i, velocity | leds.pixel(LED_PART_1 + i));
+    leds.set_pixel(
+        LED_PART_1 + led_index,
+        velocity | leds.pixel(LED_PART_1 + led_index));
   }
   (*event_handlers_.UpdateLeds)();
   leds.Sync();
