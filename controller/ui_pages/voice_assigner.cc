@@ -35,7 +35,7 @@ const prog_EventHandlers VoiceAssigner::event_handlers_ PROGMEM = {
   OnClick,
   OnPot,
   OnKey,
-  NULL,
+  OnNote,
   OnIdle,
   UpdateScreen,
   UpdateLeds,
@@ -97,6 +97,18 @@ uint8_t VoiceAssigner::OnClick() {
       multi.AssignVoicesToParts();
     }
     return 1;
+  }
+}
+
+/* static */
+uint8_t VoiceAssigner::OnNote(uint8_t note, uint8_t velocity) {
+  if (edit_mode_ != EDIT_IDLE &&
+      (active_control_ == 2 || active_control_ == 3)) {
+    ParameterEditor::OnPot(active_control_, note);
+    edit_mode_ = EDIT_IDLE;
+    return 1;
+  } else {
+    return 0;
   }
 }
 

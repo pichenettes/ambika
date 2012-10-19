@@ -34,6 +34,7 @@ class VoiceAssigner : public ParameterEditor {
   static uint8_t OnIncrement(int8_t increment);
   static uint8_t OnClick();
   static uint8_t OnPot(uint8_t index, uint8_t value);
+  static uint8_t OnNote(uint8_t note, uint8_t velocity);
 
   static void UpdateScreen();
   

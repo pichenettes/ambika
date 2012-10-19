@@ -45,7 +45,11 @@ struct PartMapping {
   }
   
   inline uint8_t accept_note(uint8_t note) const {
-    return (note >= keyrange_low && note < keyrange_high);
+    if (keyrange_low <= keyrange_high) {
+      return (note >= keyrange_low && note <= keyrange_high);
+    } else {
+      return note <= keyrange_high || note >= keyrange_low;
+    }
   }
   
   inline uint8_t accept_channel_note(uint8_t channel, uint8_t note) const {
