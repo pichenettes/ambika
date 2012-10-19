@@ -55,15 +55,23 @@ int main(void) {
   note_led.set_mode(DIGITAL_OUTPUT);
   
   uint8_t update_flag = eeprom_read_byte(kFirmwareUpdateFlagPtr);
-  // Voicecard did not boot successfully!
-  if (update_flag >= 2) {
-    for (uint8_t i = 0; i < 12; ++i) {
-      note_led.Toggle();
+  if (update_flag == 0xff) {
+    update_flag = 0;
+  }
+
+  // Flash LED to indicate boot error.
+  if (update_flag >= FIRMWARE_UPDATE_PROBING_BOOT) {
+    for (uint8_t i = 0; i < 10; ++i) {
       rx_led.Toggle();
-      ConstantDelay(120);
+      ConstantDelay(200);
     }
   }
-  if (update_flag != FIRMWARE_UPDATE_DONE) {
+  
+  // After 3 unsuccessful boots, switch to upgrade mode.
+  if (update_flag >= FIRMWARE_UPDATE_PROBING_BOOT_LAST_TRY) {
+    update_flag = FIRMWARE_UPDATE_REQUESTED;
+  }
+  if (update_flag == FIRMWARE_UPDATE_REQUESTED) {
     spi.Init();
     
     // Sync phase: wait for a sequence of at least 240 reset commands.
@@ -151,9 +159,11 @@ int main(void) {
       ConstantDelay(75);
     }
   }
-  if (update_flag != FIRMWARE_UPDATE_PROBING_BOOT) {
-    eeprom_write_byte(kFirmwareUpdateFlagPtr, FIRMWARE_UPDATE_PROBING_BOOT);
+  uint8_t new_update_flag = FIRMWARE_UPDATE_PROBING_BOOT;
+  if (update_flag >= 2 && update_flag < FIRMWARE_UPDATE_PROBING_BOOT_LAST_TRY) {
+    new_update_flag = update_flag + 1;
   }
+  eeprom_write_byte(kFirmwareUpdateFlagPtr, new_update_flag);
   void (*main_entry_point)(void) = 0x0000;
   main_entry_point();
 }

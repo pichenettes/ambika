@@ -94,6 +94,8 @@ inline void Init() {
 
   rx_led.set_mode(DIGITAL_OUTPUT);
   note_led.set_mode(DIGITAL_OUTPUT);
+  rx_led.Low();
+  note_led.Low();
   
   vcf_cutoff_out.Init();
   vcf_resonance_out.Init();
