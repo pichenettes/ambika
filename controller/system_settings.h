@@ -40,7 +40,8 @@ struct SystemSettingsData {
   uint8_t snap;
   uint8_t autobackup;
   uint8_t voicecard_leds;
-  uint8_t padding[9];
+  uint8_t swap_leds_colors;
+  uint8_t padding[8];
   uint8_t checksum;
 };
 
@@ -82,6 +83,7 @@ enum SystemParameter {
   PRM_SYSTEM_SNAP,
   PRM_SYSTEM_AUTOBACKUP,
   PRM_SYSTEM_VOICECARD_LEDS,
+  PRM_SYSTEM_VOICECARD_SWAP_LEDS_COLORS
 };
 
 extern SystemSettings system_settings;

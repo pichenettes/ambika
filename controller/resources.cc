@@ -84,6 +84,7 @@ static const prog_char str_res_help[] PROGMEM = "help";
 static const prog_char str_res_auto_backup[] PROGMEM = "auto backup";
 static const prog_char str_res_leds[] PROGMEM = "leds";
 static const prog_char str_res_card_leds[] PROGMEM = "card leds";
+static const prog_char str_res_swap_colors[] PROGMEM = "swap colors";
 static const prog_char str_res_inpt_filter[] PROGMEM = "inpt filter";
 static const prog_char str_res_outp_mode[] PROGMEM = "outp mode";
 static const prog_char str_res_ext[] PROGMEM = "ext";
@@ -433,6 +434,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_auto_backup,
   str_res_leds,
   str_res_card_leds,
+  str_res_swap_colors,
   str_res_inpt_filter,
   str_res_outp_mode,
   str_res_ext,

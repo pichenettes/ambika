@@ -80,6 +80,7 @@ help
 auto backup
 leds
 card leds
+swap colors
 inpt filter
 outp mode
 ext

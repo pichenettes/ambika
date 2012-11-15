@@ -29,7 +29,7 @@ namespace ambika {
 SystemSettingsData SystemSettings::data_;
 
 static const prog_SystemSettingsData init_settings PROGMEM = {
-  0, 0, 1, 0, 1, 1
+  0, 0, 1, 0, 1, 1, 1
 };
 
 /* static */

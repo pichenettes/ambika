@@ -25,6 +25,7 @@
 #include "controller/leds.h"
 #include "controller/multi.h"
 #include "controller/resources.h"
+#include "controller/system_settings.h"
 
 #include "controller/ui_pages/card_info_page.h"
 #include "controller/ui_pages/dialog_box.h"
@@ -133,7 +134,7 @@ const prog_PageInfo page_registry[] PROGMEM = {
 
   { PAGE_SYSTEM_SETTINGS,
     &ParameterEditor::event_handlers_,
-    { 66, 67, 0xff, 0xff, 68, 69, 71, 70, },
+    { 66, 67, 71, 72, 68, 69, 0xff, 70, },
     PAGE_SYSTEM_SETTINGS, 8, 0xf0,
   },
 
@@ -366,6 +367,11 @@ void Ui::DoEvents() {
         velocity | leds.pixel(LED_PART_1 + led_index));
   }
   (*event_handlers_.UpdateLeds)();
+  if (system_settings.data().swap_leds_colors) {
+    for (uint8_t i = 0; i < 15; ++i) {
+      leds.set_pixel(i, U8Swap4(leds.pixel(i)));
+    }
+  }
   leds.Sync();
 }
 

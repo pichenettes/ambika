@@ -858,6 +858,13 @@ static const prog_Parameter parameters[kNumParameters] PROGMEM = {
     UNIT_BOOLEAN, 0, 1,
     1, 0, 0xff, 0xff,
     STR_RES_LEDS, STR_RES_CARD_LEDS, STR_RES_SYSTEM },
+  
+  // 71 2
+  { PARAMETER_LEVEL_SYSTEM,
+    PRM_SYSTEM_VOICECARD_SWAP_LEDS_COLORS,
+    UNIT_BOOLEAN, 0, 1,
+    1, 0, 0xff, 0xff,
+    STR_RES_SWAP_COLORS, STR_RES_SWAP_COLORS, STR_RES_SYSTEM },
 };
 
 /* static */
