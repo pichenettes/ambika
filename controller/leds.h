@@ -44,9 +44,9 @@ enum LedNumber {
   LED_STATUS
 };
   
-using avrlib::LedArray;
+using avrlib::BicolorLedArray;
 
-typedef LedArray<IOEnableLine, IOClockLine, IOOutputLine, 2> Leds;
+typedef BicolorLedArray<IOEnableLine, IOClockLine, IOOutputLine, 2> Leds;
 extern Leds leds;
 
 }  // namespace ambika
