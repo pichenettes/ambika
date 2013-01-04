@@ -140,6 +140,7 @@ class NoteStack {
   }
 
   uint8_t size() const { return size_; }
+  uint8_t max_size() const { return capacity; }
   const NoteEntry& most_recent_note() const { return pool_[root_ptr_]; }
   const NoteEntry& least_recent_note() const {
     uint8_t current = root_ptr_;
@@ -160,6 +161,7 @@ class NoteStack {
     return pool_[sorted_ptr_[index]];
   }
   const NoteEntry& note(uint8_t index) const { return pool_[index]; }
+  NoteEntry* mutable_note(uint8_t index) { return &pool_[index]; }
   const NoteEntry& dummy() const { return pool_[0]; }
 
  private:

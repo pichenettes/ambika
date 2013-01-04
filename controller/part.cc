@@ -318,6 +318,13 @@ void Part::NoteOff(uint8_t note) {
     return;
   }
   if (ignore_note_off_messages_) {
+    for (uint8_t i = 1; i <= pressed_keys_.max_size(); ++i) {
+      // Flag the note so that it is removed once the sustain pedal is released.
+      NoteEntry* e = pressed_keys_.mutable_note(i);
+      if (e->note == note && e->velocity) {
+        e->velocity |= 0x80;
+      }
+    }
     return;
   }
   pressed_keys_.NoteOff(note);
@@ -357,8 +364,11 @@ void Part::ControlChange(uint8_t controller, uint8_t value) {
       } else {
         // The pedal was released. Kill all the sustained notes.
         ignore_note_off_messages_ = 0;
-        while (pressed_keys_.size()) {
-          NoteOff(pressed_keys_.most_recent_note().note);
+        for (uint8_t i = 1; i <= pressed_keys_.max_size(); ++i) {
+          NoteEntry* e = pressed_keys_.mutable_note(i);
+          if (e->velocity & 0x80) {
+            NoteOff(e->note);
+          }
         }
       }
       break;
@@ -697,7 +707,7 @@ void Part::InternalNoteOff(uint8_t note) {
           voicecard_tx.Trigger(
               allocated_voices_[i],
               tuned_note + pitch_drift,
-              mono_allocator_.most_recent_note().velocity,
+              mono_allocator_.most_recent_note().velocity & 0x7f,
               1);
           pitch_drift += data_.spread;
         }
@@ -791,12 +801,12 @@ void Part::ClockSequencer() {
       if (!n.legato) {
         // Kill the previous note and move to the new note.
         InternalNoteOff(previous_generated_note_);
-        InternalNoteOn(note, n.velocity);
+        InternalNoteOn(note, n.velocity & 0x7f);
       } else {
         // Kill the previous note, but only after having started playing the
         // new one.
         if (previous_generated_note_ != note) {
-          InternalNoteOn(note, n.velocity);
+          InternalNoteOn(note, n.velocity & 0x7f);
           InternalNoteOff(previous_generated_note_);
         } else {
           // Do nothing, this is just a note being held.
@@ -839,7 +849,7 @@ void Part::ClockArpeggiator() {
           arpeggio_note = &pressed_keys_.played_note(arp_step_);
         }
         uint8_t note = arpeggio_note->note;
-        uint8_t velocity = arpeggio_note->velocity;
+        uint8_t velocity = arpeggio_note->velocity & 0x7f;
         note += 12 * arp_octave_;
         while (note > 127) {
           note -= 12;
@@ -849,7 +859,9 @@ void Part::ClockArpeggiator() {
       } else {
         for (uint8_t i = 0; i < pressed_keys_.size(); ++i) {
           const NoteEntry* retriggered_note = &pressed_keys_.sorted_note(i);
-          InternalNoteOn(retriggered_note->note, retriggered_note->velocity);
+          InternalNoteOn(
+              retriggered_note->note,
+              retriggered_note->velocity & 0x7f);
         }
         // This is arbitrary, and used only to know at the next blank step in
         // the sequence that we have to send a note off event.
