@@ -351,6 +351,7 @@ void Storage::SysExSendRaw(
     const uint8_t* data,
     uint8_t size,
     bool send_address) {
+  midi_dispatcher.Flush();
   for (uint8_t i = 0; i < sizeof(sysex_header); ++i) {
     midi_dispatcher.SendBlocking(pgm_read_byte(sysex_header + i));
   }
@@ -379,6 +380,7 @@ void Storage::SysExSendRaw(
 
   // End of SysEx block.
   midi_dispatcher.SendBlocking(0xf7);
+  midi_dispatcher.Flush();
 }
 
 /* static */

@@ -279,6 +279,10 @@ class MidiDispatcher : public midi::MidiDevice {
   
   static void Send3(uint8_t status, uint8_t a, uint8_t b);
   static void SendBlocking(uint8_t byte);
+  
+  static void Flush() {
+    while (OutputBufferLowPriority::readable());
+  }
 
  private:
   static void Send(uint8_t status, uint8_t* data, uint8_t size);
