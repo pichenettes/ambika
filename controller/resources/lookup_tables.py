@@ -113,9 +113,6 @@ def DecodeShrutiChart(line):
 
 """----------------------------------------------------------------------------
 A recommended key on the keyboard for each of the swara.
-
-From:
-http://commons.wikimedia.org/wiki/Melakarta_ragams_(svg)
 ----------------------------------------------------------------------------"""
 
 recommended_keys = {
