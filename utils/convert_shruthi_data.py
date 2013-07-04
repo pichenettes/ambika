@@ -534,7 +534,7 @@ def main(options, args):
     
     patch = BuildAmbikaPatch(ShruthiPatch(data))
     SaveAmbikaProgram(
-        file('controller/data/programs2/%03d.PRO' % program_number, 'w'),
+        file('controller/data/programs2/%03d.PRO' % program_number, 'wb'),
         patch,
         DEFAULT_AMBIKA_PART_DATA,
         name)

@@ -26,7 +26,7 @@ import struct
 
 def main(options, args):
   for f in args:
-    data = file(f).read()[8:-3]
+    data = file(f, 'rb').read()[8:-3]
     string = ''.join(map(lambda x: '0123456789abcdef'[x], map(ord, data)))
     name = ''
     for i in xrange(68, 76):
