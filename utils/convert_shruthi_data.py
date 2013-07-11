@@ -54,6 +54,12 @@ SHRUTHI_MOD_SOURCE = [
   'MOD_SRC_AUDIO',
   'MOD_SRC_OP_1',
   'MOD_SRC_OP_2',
+  'MOD_SRC_TRIG_1',
+  'MOD_SRC_TRIG_2',
+  'MOD_SRC_CONSTANT_4',
+  'MOD_SRC_CONSTANT_8',
+  'MOD_SRC_CONSTANT_16',
+  'MOD_SRC_CONSTANT_32',
 ]
 
 SHRUTHI_MOD_DESTINATION = [
@@ -74,6 +80,8 @@ SHRUTHI_MOD_DESTINATION = [
   'MOD_DST_ATTACK',
   'MOD_DST_LFO_1',
   'MOD_DST_LFO_2',
+  'MOD_DST_TRIGGER_ENV_1',
+  'MOD_DST_TRIGGER_ENV_2',
 ]
 
 SHRUTHI_OSCILLATOR_ALGORITHM = [
@@ -172,6 +180,7 @@ AMBIKA_OSCILLATOR_ALGORITHM = {
   'WAVEFORM_WAVETABLE_BELLISH': 36,
   'WAVEFORM_WAVETABLE_WAVEQUENCE': 37,
   'WAVEFORM_WAVETABLE_USER': 31,
+  'WAVEFORM_WAVETABLE_RES3HP': 9,
   'WAVEFORM_CZ_RESO': 6,
   'WAVEFORM_CZ_TRIANGLE': 14,
   'WAVEFORM_CZ_PULSE': 11,
@@ -402,7 +411,31 @@ def BuildAmbikaPatch(p):
     patch[10] = p.mix_balance
     patch[14] = 0
     patch[15] = 0
+  elif op == 'OP_DUO':
+    patch[8] = p.mix_balance
+    patch[9] = 0
+    patch[10] = 0
+    patch[14] = 0
+    patch[15] = 0
   elif op == 'OP_PING_PONG_2':
+    patch[8] = p.mix_balance
+    patch[9] = 0
+    patch[10] = 0
+    patch[14] = 0
+    patch[15] = 0
+  elif op == 'OP_PING_PONG_4':
+    patch[8] = p.mix_balance
+    patch[9] = 0
+    patch[10] = 0
+    patch[14] = 0
+    patch[15] = 0
+  elif op == 'OP_PING_PONG_8':
+    patch[8] = p.mix_balance
+    patch[9] = 0
+    patch[10] = 0
+    patch[14] = 0
+    patch[15] = 0
+  elif op == 'OP_PING_PONG_SEQ':
     patch[8] = p.mix_balance
     patch[9] = 0
     patch[10] = 0
@@ -427,7 +460,7 @@ def BuildAmbikaPatch(p):
   patch[27] = 40
   patch[28] = p.lfo[0]['waveform']
   patch[29] = p.lfo[0]['rate']
-  patch[30] = p.lfo[0]['attack']
+  patch[30] = 0
   patch[31] = p.lfo[0]['retrigger_mode']
 
   patch[32] = p.env[0]['attack']
@@ -436,7 +469,7 @@ def BuildAmbikaPatch(p):
   patch[35] = p.env[0]['release']
   patch[36] = p.lfo[1]['waveform']
   patch[37] = p.lfo[1]['rate']
-  patch[38] = p.lfo[1]['attack']
+  patch[38] = 0
   patch[39] = p.lfo[1]['retrigger_mode']
 
   patch[40] = p.env[1]['attack']
@@ -460,9 +493,15 @@ def BuildAmbikaPatch(p):
       modulation = p.modulations[i]
     if i >= 8:
       modulation = p.modulations[i - 2]
+
+    # attack modulation is inverted on Ambika compared to Shruthi
+    if modulation['destination'] == 'MOD_DST_ATTACK' and modulation['amount'] != 0:
+      modulation['amount'] = 256 - modulation['amount']
     
-    if modulation['source'] not in AMBIKA_MODULATION_SOURCE:
+    # disable modulations that are unavailable on Ambika
+    if modulation['source'] not in AMBIKA_MODULATION_SOURCE or modulation['destination'] not in AMBIKA_MODULATION_DESTINATION:
       modulation['source'] = 'MOD_SRC_LFO_1'
+      modulation['destination'] = 'MOD_DST_FILTER_CUTOFF'
       modulation['amount'] = 0
     
     patch[50 + i * 3] = AMBIKA_MODULATION_SOURCE[modulation['source']]
@@ -534,7 +573,7 @@ def main(options, args):
     
     patch = BuildAmbikaPatch(ShruthiPatch(data))
     SaveAmbikaProgram(
-        file('controller/data/programs2/%03d.PRO' % program_number, 'w'),
+        file('controller/data/programs2/%03d.PRO' % program_number, 'wb'),
         patch,
         DEFAULT_AMBIKA_PART_DATA,
         name)
