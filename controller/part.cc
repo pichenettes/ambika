@@ -169,7 +169,6 @@ void Part::Init() {
   ignore_note_off_messages_ = 0;
   pressed_keys_.Init();
   mono_allocator_.Init();
-  poly_allocator_.Init();
 }
 
 void Part::InitPatch(InitializationMode mode) {
@@ -228,19 +227,30 @@ void Part::AssignVoices(uint8_t allocation) {
     }
     mask <<= 1;
   }
-  UpdatePolyAllocator();
-  
+  InitializeAllocators();
   TouchPatch();
   Touch();
 }
 
-void Part::UpdatePolyAllocator() {
-  poly_allocator_.Clear();
-  poly_allocator_.set_size(num_allocated_voices_);
-  if (data_.polyphony_mode == UNISON_2X) {
-    poly_allocator_.set_size((num_allocated_voices_ + 1) >> 1);
+void Part::InitializeAllocators() {
+  if (data_.polyphony_mode == MONO) {
+    mono_allocator_.Init();
+  } else {
+    uint8_t size;
+    if (data_.polyphony_mode == UNISON_2X) {
+      size = (num_allocated_voices_ + 1) >> 1;
+    } else {
+      size = num_allocated_voices_;
+    }
+    // We reuse the storage for the monophonic allocator (note stack) for the
+    // polyphonic allocator - since these two datastructures are never used
+    // at the same time.
+    poly_allocator_.Init(
+        size,
+        data_.polyphony_mode == CYCLIC,
+        mono_allocator_.bytes(),
+        mono_allocator_.bytes() + 12);
   }
-  poly_allocator_.set_cyclic_mode(data_.polyphony_mode == CYCLIC);
 }
 
 void Part::TouchLfos() {
@@ -282,7 +292,7 @@ void Part::SetValue(
   
   if (address == PRM_PART_POLYPHONY_MODE && old_value != value) {
     AllSoundOff();
-    UpdatePolyAllocator();
+    InitializeAllocators();
   }
   
   // Some parameter changes requires an update of some internal book-keeping
@@ -503,8 +513,11 @@ void Part::Aftertouch(uint8_t velocity) {
 }
 
 void Part::AllSoundOff() {
-  poly_allocator_.Clear();
-  mono_allocator_.Clear();
+  if (data_.polyphony_mode == MONO) {
+    mono_allocator_.Clear();
+  } else {
+    poly_allocator_.Clear();
+  }
   pressed_keys_.Clear();
   for (uint8_t i = 0; i < num_allocated_voices_; ++i) {
     voicecard_tx.Kill(allocated_voices_[i]);
@@ -512,8 +525,11 @@ void Part::AllSoundOff() {
 }
 
 void Part::AllNotesOff() {
-  poly_allocator_.ClearNotes();
-  mono_allocator_.Clear();
+  if (data_.polyphony_mode == MONO) {
+    mono_allocator_.Clear();
+  } else {
+    poly_allocator_.ClearNotes();
+  }
   pressed_keys_.Clear();
   for (uint8_t i = 0; i < num_allocated_voices_; ++i) {
     voicecard_tx.Release(allocated_voices_[i]);

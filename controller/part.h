@@ -262,7 +262,7 @@ class Part {
 
  private:
   void RandomizeRange(uint8_t start, uint8_t size);
-  void UpdatePolyAllocator();
+  void InitializeAllocators();
   void TouchVoiceAllocation();
   void TouchClock();
   void TouchLfos();
@@ -312,7 +312,7 @@ class Part {
   // is held.
   uint8_t ignore_note_off_messages_;
   NoteStack<12> pressed_keys_;
-  NoteStack<6> mono_allocator_;
+  NoteStack<7> mono_allocator_;
   VoiceAllocator poly_allocator_;
   
   uint8_t data_entry_msb_;

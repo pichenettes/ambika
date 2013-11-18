@@ -25,14 +25,13 @@ namespace ambika {
   
 void VoiceAllocator::Clear() {
   ClearNotes();
-  for (uint8_t i = 0; i < kMaxPolyphony; ++i) {
-    lru_[i] = kMaxPolyphony - i - 1;
+  for (uint8_t i = 0; i < size_; ++i) {
+    lru_[i] = size_ - i - 1;
   }
-  cyclic_allocator_ = 0xff;
 }
 
 void VoiceAllocator::ClearNotes() {
-  memset(&pool_, 0, sizeof(pool_));
+  memset(pool_, 0, size_);
 }
 
 uint8_t VoiceAllocator::NoteOn(uint8_t note) {
@@ -51,7 +50,7 @@ uint8_t VoiceAllocator::NoteOn(uint8_t note) {
   
     // Then, try to find the least recently touched, currently inactive voice.
     if (voice == 0xff) {
-      for (uint8_t i = 0; i < kMaxPolyphony; ++i) {
+      for (uint8_t i = 0; i < size_; ++i) {
         if (lru_[i] < size_ && !(pool_[lru_[i]] & 0x80)) {
           voice = lru_[i];
         }
@@ -59,7 +58,7 @@ uint8_t VoiceAllocator::NoteOn(uint8_t note) {
     }
     // If all voices are active, use the least recently played note.
     if (voice == 0xff) {
-      for (uint8_t i = 0; i < kMaxPolyphony; ++i) {
+      for (uint8_t i = 0; i < size_; ++i) {
         if (lru_[i] < size_) {
           voice = lru_[i];
         }
@@ -101,8 +100,8 @@ uint8_t VoiceAllocator::NoteOff(uint8_t note) {
 }
 
 void VoiceAllocator::Touch(uint8_t voice) {
-  int8_t source = kMaxPolyphony - 1;
-  int8_t destination = kMaxPolyphony - 1;
+  int8_t source = size_ - 1;
+  int8_t destination = size_ - 1;
   while (source >= 0) {
     if (lru_[source] != voice) {
       lru_[destination--] = lru_[source];
