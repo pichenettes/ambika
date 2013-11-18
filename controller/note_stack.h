@@ -54,7 +54,6 @@ class NoteStack {
  public: 
   NoteStack() { }
   void Init() { Clear(); }
-
   void NoteOn(uint8_t note, uint8_t velocity) {
     // Remove the note from the list first (in case it is already here).
     NoteOff(note);
@@ -163,6 +162,7 @@ class NoteStack {
   const NoteEntry& note(uint8_t index) const { return pool_[index]; }
   NoteEntry* mutable_note(uint8_t index) { return &pool_[index]; }
   const NoteEntry& dummy() const { return pool_[0]; }
+  void* bytes() { return &pool_[0]; }
 
  private:
   uint8_t size_;

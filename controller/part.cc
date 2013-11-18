@@ -240,6 +240,7 @@ void Part::UpdatePolyAllocator() {
   if (data_.polyphony_mode == UNISON_2X) {
     poly_allocator_.set_size((num_allocated_voices_ + 1) >> 1);
   }
+  poly_allocator_.set_cyclic_mode(data_.polyphony_mode == CYCLIC);
 }
 
 void Part::TouchLfos() {

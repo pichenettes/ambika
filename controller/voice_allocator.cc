@@ -28,6 +28,7 @@ void VoiceAllocator::Clear() {
   for (uint8_t i = 0; i < kMaxPolyphony; ++i) {
     lru_[i] = kMaxPolyphony - i - 1;
   }
+  cyclic_allocator_ = 0xff;
 }
 
 void VoiceAllocator::ClearNotes() {
@@ -39,28 +40,39 @@ uint8_t VoiceAllocator::NoteOn(uint8_t note) {
     return 0xff;
   }
   
-  // First, check if there is a voice currently playing this note. In this case
-  // This voice will be responsible for retriggering this note.
-  // Hint: if you're more into string instruments than keyboard instruments,
-  // you can safely comment those lines.
-  uint8_t voice = Find(note);
+  uint8_t voice;
   
-  // Then, try to find the least recently touched, currently inactive voice.
-  if (voice == 0xff) {
-    for (uint8_t i = 0; i < kMaxPolyphony; ++i) {
-      if (lru_[i] < size_ && !(pool_[lru_[i]] & 0x80)) {
-        voice = lru_[i];
+  if (cyclic_allocator_ == 0xff) {
+    // First, check if there is a voice currently playing this note. In this case
+    // This voice will be responsible for retriggering this note.
+    // Hint: if you're more into string instruments than keyboard instruments,
+    // you can safely comment those lines.
+    voice = Find(note);
+  
+    // Then, try to find the least recently touched, currently inactive voice.
+    if (voice == 0xff) {
+      for (uint8_t i = 0; i < kMaxPolyphony; ++i) {
+        if (lru_[i] < size_ && !(pool_[lru_[i]] & 0x80)) {
+          voice = lru_[i];
+        }
       }
     }
-  }
-  // If all voices are active, use the least recently played note.
-  if (voice == 0xff) {
-    for (uint8_t i = 0; i < kMaxPolyphony; ++i) {
-      if (lru_[i] < size_) {
-        voice = lru_[i];
+    // If all voices are active, use the least recently played note.
+    if (voice == 0xff) {
+      for (uint8_t i = 0; i < kMaxPolyphony; ++i) {
+        if (lru_[i] < size_) {
+          voice = lru_[i];
+        }
       }
     }
+  } else {
+    ++cyclic_allocator_;
+    if (cyclic_allocator_ >= size_) {
+      cyclic_allocator_ = 0;
+    }
+    voice = cyclic_allocator_;
   }
+  
   pool_[voice] = 0x80 | note;
   Touch(voice);
   return voice;
@@ -77,9 +89,13 @@ uint8_t VoiceAllocator::Find(uint8_t note) const {
 
 uint8_t VoiceAllocator::NoteOff(uint8_t note) {
   uint8_t voice = Find(note);
-  if (voice != 0xff) {
-    pool_[voice] &= 0x7f;
-    Touch(voice);
+  if (cyclic_allocator_ == 0xff) {
+    if (voice != 0xff) {
+      pool_[voice] &= 0x7f;
+      Touch(voice);
+    }
+  } else {
+    pool_[voice] = 0xff;
   }
   return voice;
 }

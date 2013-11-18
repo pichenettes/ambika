@@ -58,7 +58,8 @@ enum ArpSequencerMode {
 enum PolyphonyMode {
   MONO,
   POLY,
-  UNISON_2X
+  UNISON_2X,
+  CYCLIC
 };
 
 enum PartFlags {

@@ -22,7 +22,7 @@
 
 #include "avrlib/base.h"
 
-static const uint8_t kMaxPolyphony = 8;
+static const uint8_t kMaxPolyphony = 12;
 
 namespace ambika {
 
@@ -33,6 +33,10 @@ class VoiceAllocator {
   void set_size(uint8_t size) {
     size_ = size;
   }
+  void set_cyclic_mode(bool cyclic_mode) {
+    cyclic_allocator_ = cyclic_mode ? 0 : 0xff;
+  }
+  
   uint8_t NoteOn(uint8_t note);
   uint8_t NoteOff(uint8_t note);
   uint8_t Find(uint8_t note) const;
@@ -47,6 +51,7 @@ class VoiceAllocator {
   // Holds the indices of the voices sorted by most recent usage.
   uint8_t lru_[kMaxPolyphony];
   uint8_t size_;
+  uint8_t cyclic_allocator_;
 
   DISALLOW_COPY_AND_ASSIGN(VoiceAllocator);
 };

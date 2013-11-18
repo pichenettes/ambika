@@ -273,7 +273,8 @@ class MidiDispatcher : public midi::MidiDevice {
       current_parameter_address_ = address;
       data_entry_counter_ = 0;
     }
-    Send3(0xb0 | channel, midi::kDataEntryMsb, 1);
+    uint8_t msb = (value & 0x80) ? 1 : 0;
+    Send3(0xb0 | channel, midi::kDataEntryMsb, msb);
     Send3(0xb0 | channel, midi::kDataEntryLsb, value & 0x7f);
   }
   

@@ -304,6 +304,7 @@ lag
 mono
 poly
 2x unison
+cyclic
 
 up
 down
