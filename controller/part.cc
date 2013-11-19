@@ -476,10 +476,16 @@ uint8_t Part::GetNextVoice(uint8_t index) const {
 }
 
 void Part::Aftertouch(uint8_t note, uint8_t velocity) {
-  if (data_.polyphony_mode == POLY) {
+  if (data_.polyphony_mode == POLY ||
+      data_.polyphony_mode == CYCLIC ||
+      data_.polyphony_mode == CHAIN) {
     // Send the aftertouch change to the voicecard playing the affected note.
     uint8_t voice_index = poly_allocator_.Find(note);
-    if (voice_index < poly_allocator_.size()) {
+    uint8_t size = poly_allocator_.size();
+    if (data_.polyphony_mode == CYCLIC) {
+      size >>= 1;
+    }
+    if (voice_index < size) {
       voicecard_tx.WriteData(
           allocated_voices_[voice_index],
           VOICECARD_DATA_MODULATION,
@@ -498,15 +504,6 @@ void Part::Aftertouch(uint8_t note, uint8_t velocity) {
           velocity);
       voicecard_tx.WriteData(
           allocated_voices_[GetNextVoice(voice_index)],
-          VOICECARD_DATA_MODULATION,
-          MOD_SRC_AFTERTOUCH,
-          velocity);
-    }
-  } else if (data_.polyphony_mode == CHAIN) {
-    uint8_t voice_index = poly_allocator_.Find(note);
-    if (voice_index < (poly_allocator_.size() >> 1)) {
-      voicecard_tx.WriteData(
-          allocated_voices_[voice_index],
           VOICECARD_DATA_MODULATION,
           MOD_SRC_AFTERTOUCH,
           velocity);
