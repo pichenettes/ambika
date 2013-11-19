@@ -757,7 +757,7 @@ static const prog_Parameter parameters[kNumParameters] PROGMEM = {
   // 57
   { PARAMETER_LEVEL_PART,
     PRM_PART_POLYPHONY_MODE,
-    UNIT_POLYPHONY_MODE, 0, 3,
+    UNIT_POLYPHONY_MODE, MONO, POLYPHONY_MODE_LAST - 1,
     1, 0, 0xff, 107,
     STR_RES_MODE, STR_RES_MODE, STR_RES_PART },
   

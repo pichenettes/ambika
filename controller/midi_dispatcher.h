@@ -186,6 +186,12 @@ class MidiDispatcher : public midi::MidiDevice {
       uint8_t accepted_channel) {
     if (mode() == MIDI_OUT_FULL) {
       Send(status, data, data_size);
+    } else if (mode() == MIDI_OUT_CHAIN) {
+      // In chain mode, forward everything... except notes.
+      uint8_t hi = status & 0xf0;
+      if (hi != 0x80 && hi != 0x90) {
+        Send(status, data, data_size);
+      }
     }
   }
   
@@ -213,23 +219,18 @@ class MidiDispatcher : public midi::MidiDevice {
   
   
   // ------ Generation of MIDI out messages ------------------------------------
-  static inline void OnInternalNoteOff(Part* part, uint8_t note) {
-    uint8_t channel = multi.part_channel(part);
+  static inline void OnNote(Part* part, uint8_t note, uint8_t velocity) {
     if (mode() == MIDI_OUT_SEQUENCER) {
-      Send3(0x90 | channel, note, 0);
+      Send3(0x90 | multi.part_channel(part), note, velocity);
     }
   }
   
-  static inline void OnInternalNoteOn(
-      Part* part,
-      uint8_t note,
-      uint8_t velocity) {
-    uint8_t channel = multi.part_channel(part);
-    if (mode() == MIDI_OUT_SEQUENCER) {
-      Send3(0x90 | channel, note, velocity);
+  static inline void ForwardNote(Part* part, uint8_t note, uint8_t velocity) {
+    if (mode() == MIDI_OUT_CHAIN) {
+      Send3(0x90 | multi.part_channel(part), note, velocity);
     }
   }
-  
+
   static inline void OnStart() {
     if (mode() == MIDI_OUT_SEQUENCER) {
       SendNow(0xfa);
@@ -290,7 +291,7 @@ class MidiDispatcher : public midi::MidiDevice {
   static void SendNow(uint8_t byte);
   static uint8_t mode() { return system_settings.data().midi_out_mode; }
   static void ProcessSysEx(uint8_t byte) {
-    if (mode() == MIDI_OUT_FULL) {
+    if (mode() == MIDI_OUT_FULL || mode() == MIDI_OUT_CHAIN) {
       Send(byte, NULL, 0);
     }
     Storage::SysExReceive(byte);

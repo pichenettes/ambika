@@ -236,11 +236,11 @@ void Part::InitializeAllocators() {
   if (data_.polyphony_mode == MONO) {
     mono_allocator_.Init();
   } else {
-    uint8_t size;
+    uint8_t size = num_allocated_voices_;
     if (data_.polyphony_mode == UNISON_2X) {
       size = (num_allocated_voices_ + 1) >> 1;
-    } else {
-      size = num_allocated_voices_;
+    } else if (data_.polyphony_mode == CHAIN) {
+      size <<= 1;
     }
     // We reuse the storage for the monophonic allocator (note stack) for the
     // polyphonic allocator - since these two datastructures are never used
@@ -502,6 +502,15 @@ void Part::Aftertouch(uint8_t note, uint8_t velocity) {
           MOD_SRC_AFTERTOUCH,
           velocity);
     }
+  } else if (data_.polyphony_mode == CHAIN) {
+    uint8_t voice_index = poly_allocator_.Find(note);
+    if (voice_index < (poly_allocator_.size() >> 1)) {
+      voicecard_tx.WriteData(
+          allocated_voices_[voice_index],
+          VOICECARD_DATA_MODULATION,
+          MOD_SRC_AFTERTOUCH,
+          velocity);
+    }
   } else {
     // Process the message as if it were a global aftertouch message.
     Aftertouch(velocity);
@@ -537,11 +546,11 @@ void Part::AllNotesOff() {
   
   if (previous_generated_note_ != 0xff) {
     if (data_.arp_direction != ARPEGGIO_DIRECTION_CHORD) {
-      midi_dispatcher.OnInternalNoteOff(this, previous_generated_note_);
+      midi_dispatcher.OnNote(this, previous_generated_note_, 0);
     } else {
       for (uint8_t i = 0; i < pressed_keys_.size(); ++i) {
         const NoteEntry* retriggered_note = &pressed_keys_.sorted_note(i);
-        midi_dispatcher.OnInternalNoteOff(this, retriggered_note->note);
+        midi_dispatcher.OnNote(this, retriggered_note->note, 0);
       }
     }
     previous_generated_note_ = 0xff;
@@ -645,7 +654,7 @@ void Part::InternalNoteOn(uint8_t note, uint8_t velocity) {
   if (!AcceptNote(note)) { 
     return;
   }
-  midi_dispatcher.OnInternalNoteOn(this, note, velocity);
+  midi_dispatcher.OnNote(this, note, velocity);
 
   uint8_t retrigger_lfos = 0;
   if (data_.polyphony_mode == MONO) {
@@ -662,33 +671,46 @@ void Part::InternalNoteOn(uint8_t note, uint8_t velocity) {
       pitch_drift += data_.spread;
     }
     retrigger_lfos = !legato || !data_.legato;
-  } else if (data_.polyphony_mode == UNISON_2X) {
-    uint8_t voice_index = poly_allocator_.NoteOn(note);
-    if (voice_index < poly_allocator_.size()) {
-      voice_index <<= 1;
-      uint16_t tuned_note = TuneNote(note);
-      voicecard_tx.Trigger(
-          allocated_voices_[voice_index],
-          tuned_note,
-          velocity,
-          0);
-      voicecard_tx.Trigger(
-          allocated_voices_[GetNextVoice(voice_index)],
-          tuned_note + data_.spread,
-          velocity,
-          0);
-      retrigger_lfos = 1;
-    }
   } else {
     uint8_t voice_index = poly_allocator_.NoteOn(note);
-    if (voice_index < poly_allocator_.size()) {
-      uint16_t tuned_note = TuneNote(note);
-      voicecard_tx.Trigger(
-          allocated_voices_[voice_index],
-          tuned_note + voice_index * data_.spread,
-          velocity,
-          0);
+    if (data_.polyphony_mode == UNISON_2X) {
+      if (voice_index < poly_allocator_.size()) {
+        voice_index <<= 1;
+        uint16_t tuned_note = TuneNote(note);
+        voicecard_tx.Trigger(
+            allocated_voices_[voice_index],
+            tuned_note,
+            velocity,
+            0);
+        voicecard_tx.Trigger(
+            allocated_voices_[GetNextVoice(voice_index)],
+            tuned_note + data_.spread,
+            velocity,
+            0);
+        retrigger_lfos = 1;
+      }
+    } else if (data_.polyphony_mode == CHAIN) {
+      if (voice_index < (poly_allocator_.size() >> 1)) {
+        uint16_t tuned_note = TuneNote(note);
+        voicecard_tx.Trigger(
+            allocated_voices_[voice_index],
+            tuned_note + voice_index * data_.spread,
+            velocity,
+            0);
+      } else {
+        midi_dispatcher.ForwardNote(this, note, velocity);
+      }
       retrigger_lfos = 1;
+    } else {
+      if (voice_index < poly_allocator_.size()) {
+        uint16_t tuned_note = TuneNote(note);
+        voicecard_tx.Trigger(
+            allocated_voices_[voice_index],
+            tuned_note + voice_index * data_.spread,
+            velocity,
+            0);
+        retrigger_lfos = 1;
+      }
     }
   }
   
@@ -703,7 +725,7 @@ void Part::InternalNoteOff(uint8_t note) {
   if (note == 0xff) {
     return;
   }
-  midi_dispatcher.OnInternalNoteOff(this, note);
+  midi_dispatcher.OnNote(this, note, 0);
   
   uint8_t retrigger_lfos = 0;
   if (data_.polyphony_mode == MONO) {
@@ -731,17 +753,24 @@ void Part::InternalNoteOff(uint8_t note) {
         retrigger_lfos = !data_.legato;
       }
     }
-  } else if (data_.polyphony_mode == UNISON_2X) {
-    uint8_t voice_index = poly_allocator_.NoteOff(note);
-    if (voice_index < poly_allocator_.size()) {
-      voice_index <<= 1;
-      voicecard_tx.Release(allocated_voices_[voice_index]);
-      voicecard_tx.Release(allocated_voices_[GetNextVoice(voice_index)]);
-    }
   } else {
     uint8_t voice_index = poly_allocator_.NoteOff(note);
-    if (voice_index < poly_allocator_.size()) {
-      voicecard_tx.Release(allocated_voices_[voice_index]);
+    if (data_.polyphony_mode == UNISON_2X) {
+      if (voice_index < poly_allocator_.size()) {
+        voice_index <<= 1;
+        voicecard_tx.Release(allocated_voices_[voice_index]);
+        voicecard_tx.Release(allocated_voices_[GetNextVoice(voice_index)]);
+      }
+    } else if (data_.polyphony_mode == CHAIN) {
+      if (voice_index < (poly_allocator_.size() >> 1)) {
+        voicecard_tx.Release(allocated_voices_[voice_index]);
+      } else {
+        midi_dispatcher.ForwardNote(this, note, 0);
+      }
+    } else {
+      if (voice_index < poly_allocator_.size()) {
+        voicecard_tx.Release(allocated_voices_[voice_index]);
+      }
     }
   }
   if (retrigger_lfos) {

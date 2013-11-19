@@ -59,7 +59,9 @@ enum PolyphonyMode {
   MONO,
   POLY,
   UNISON_2X,
-  CYCLIC
+  CYCLIC,
+  CHAIN,
+  POLYPHONY_MODE_LAST
 };
 
 enum PartFlags {

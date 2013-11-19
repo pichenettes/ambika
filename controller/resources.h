@@ -354,108 +354,110 @@ extern const prog_uint8_t wav_res_lfo_waveforms[] PROGMEM;
 #define STR_RES_POLY 267  // poly
 #define STR_RES_2X_UNISON 268  // 2x unison
 #define STR_RES_CYCLIC 269  // cyclic
-#define STR_RES_UP 270  // up
-#define STR_RES_DOWN 271  // down
-#define STR_RES_UP_DOWN 272  // up&down
-#define STR_RES_PLAYED 273  // played
-#define STR_RES__RANDOM 274  // random
-#define STR_RES_CHORD 275  // chord
-#define STR_RES_1_1 276  // 1/1
-#define STR_RES_3_4 277  // 3/4
-#define STR_RES_2_3 278  // 2/3
-#define STR_RES_1_2 279  // 1/2
-#define STR_RES_3_8 280  // 3/8
-#define STR_RES_1_3 281  // 1/3
-#define STR_RES_1_4 282  // 1/4
-#define STR_RES_1_6 283  // 1/6
-#define STR_RES_1_8 284  // 1/8
-#define STR_RES_1_12 285  // 1/12
-#define STR_RES_1_16 286  // 1/16
-#define STR_RES_1_24 287  // 1/24
-#define STR_RES_1_32 288  // 1/32
-#define STR_RES_1_48 289  // 1/48
-#define STR_RES_1_96 290  // 1/96
-#define STR_RES_THRU 291  // thru
-#define STR_RES_SEQUENCER 292  // sequencer
-#define STR_RES_CONTROLLR 293  // controllr
-#define STR_RES_FULL 294  // full
-#define STR_RES_____ 295  // ....
-#define STR_RES____S 296  // ...s
-#define STR_RES___P_ 297  // ..p.
-#define STR_RES___PS 298  // ..ps
-#define STR_RES__N__ 299  // .n..
-#define STR_RES__N_S 300  // .n.s
-#define STR_RES__NP_ 301  // .np.
-#define STR_RES__NPS 302  // .nps
-#define STR_RES_C___ 303  // c...
-#define STR_RES_C__S 304  // c..s
-#define STR_RES_C_P_ 305  // c.p.
-#define STR_RES_C_PS 306  // c.ps
-#define STR_RES_CN__ 307  // cn..
-#define STR_RES_CN_S 308  // cn.s
-#define STR_RES_CNP_ 309  // cnp.
-#define STR_RES_CNPS 310  // cnps
-#define STR_RES_SWING 311  // swing
-#define STR_RES_SHUFFLE 312  // shuffle
-#define STR_RES_PUSH 313  // push
-#define STR_RES__LAG 314  // lag
-#define STR_RES_HUMAN 315  // human
-#define STR_RES_MONKEY 316  // monkey
-#define STR_RES_OSCILLATOR_1 317  // oscillator 1
-#define STR_RES_OSCILLATOR_2 318  // oscillator 2
-#define STR_RES_MIXER 319  // mixer
-#define STR_RES_LFO 320  // lfo
-#define STR_RES_FILTER_1 321  // filter 1
-#define STR_RES_FILTER_2 322  // filter 2
-#define STR_RES_ENVELOPE 323  // envelope
-#define STR_RES_ARPEGGIATOR 324  // arpeggiator
-#define STR_RES_MULTI 325  // multi
-#define STR_RES_CLOCK 326  // clock
-#define STR_RES_PERFORMANCE 327  // performance
-#define STR_RES_SYSTEM 328  // system
-#define STR_RES_PT_X_PATCH 329  // pt X patch
-#define STR_RES_PT_X_SEQUENCE 330  // pt X sequence
-#define STR_RES_PT_X_PROGRAM 331  // pt X program
-#define STR_RES_RANDOMIZE 332  // randomize
-#define STR_RES_INIT 333  // init
-#define STR_RES_PATCH 334  // PATCH
-#define STR_RES_SEQUENCE 335  // SEQUENCE
-#define STR_RES_PROGRAM 336  // PROGRAM
-#define STR_RES__MULTI 337  // MULTI
-#define STR_RES____ 338  // ___
-#define STR_RES_EQUAL 339  // equal
-#define STR_RES_JUST 340  // just
-#define STR_RES_PYTHAGOREAN 341  // pythagorean
-#define STR_RES_1_4_EB 342  // 1/4 eb
-#define STR_RES_1_4_E 343  // 1/4 e
-#define STR_RES_1_4_EA 344  // 1/4 ea
-#define STR_RES_BHAIRAV 345  // bhairav
-#define STR_RES_GUNAKRI 346  // gunakri
-#define STR_RES_MARWA 347  // marwa
-#define STR_RES_SHREE 348  // shree
-#define STR_RES_PURVI 349  // purvi
-#define STR_RES_BILAWAL 350  // bilawal
-#define STR_RES_YAMAN 351  // yaman
-#define STR_RES_KAFI 352  // kafi
-#define STR_RES_BHIMPALASREE 353  // bhimpalasree
-#define STR_RES_DARBARI 354  // darbari
-#define STR_RES_BAGESHREE 355  // bageshree
-#define STR_RES_RAGESHREE 356  // rageshree
-#define STR_RES_KHAMAJ 357  // khamaj
-#define STR_RES_MIMAL 358  // mi'mal
-#define STR_RES_PARAMESHWARI 359  // parameshwari
-#define STR_RES_RANGESHWARI 360  // rangeshwari
-#define STR_RES_GANGESHWARI 361  // gangeshwari
-#define STR_RES_KAMESHWARI 362  // kameshwari
-#define STR_RES_PA__KAFI 363  // pa. kafi
-#define STR_RES_NATBHAIRAV 364  // natbhairav
-#define STR_RES_M_KAUNS 365  // m.kauns
-#define STR_RES_BAIRAGI 366  // bairagi
-#define STR_RES_B_TODI 367  // b.todi
-#define STR_RES_CHANDRADEEP 368  // chandradeep
-#define STR_RES_KAUSHIK_TODI 369  // kaushik todi
-#define STR_RES_JOGESHWARI 370  // jogeshwari
-#define STR_RES_RASIA 371  // rasia
+#define STR_RES_CHAIN 270  // chain
+#define STR_RES_UP 271  // up
+#define STR_RES_DOWN 272  // down
+#define STR_RES_UP_DOWN 273  // up&down
+#define STR_RES_PLAYED 274  // played
+#define STR_RES__RANDOM 275  // random
+#define STR_RES_CHORD 276  // chord
+#define STR_RES_1_1 277  // 1/1
+#define STR_RES_3_4 278  // 3/4
+#define STR_RES_2_3 279  // 2/3
+#define STR_RES_1_2 280  // 1/2
+#define STR_RES_3_8 281  // 3/8
+#define STR_RES_1_3 282  // 1/3
+#define STR_RES_1_4 283  // 1/4
+#define STR_RES_1_6 284  // 1/6
+#define STR_RES_1_8 285  // 1/8
+#define STR_RES_1_12 286  // 1/12
+#define STR_RES_1_16 287  // 1/16
+#define STR_RES_1_24 288  // 1/24
+#define STR_RES_1_32 289  // 1/32
+#define STR_RES_1_48 290  // 1/48
+#define STR_RES_1_96 291  // 1/96
+#define STR_RES_THRU 292  // thru
+#define STR_RES_SEQUENCER 293  // sequencer
+#define STR_RES_CONTROLLR 294  // controllr
+#define STR_RES__CHAIN 295  // chain
+#define STR_RES_FULL 296  // full
+#define STR_RES_____ 297  // ....
+#define STR_RES____S 298  // ...s
+#define STR_RES___P_ 299  // ..p.
+#define STR_RES___PS 300  // ..ps
+#define STR_RES__N__ 301  // .n..
+#define STR_RES__N_S 302  // .n.s
+#define STR_RES__NP_ 303  // .np.
+#define STR_RES__NPS 304  // .nps
+#define STR_RES_C___ 305  // c...
+#define STR_RES_C__S 306  // c..s
+#define STR_RES_C_P_ 307  // c.p.
+#define STR_RES_C_PS 308  // c.ps
+#define STR_RES_CN__ 309  // cn..
+#define STR_RES_CN_S 310  // cn.s
+#define STR_RES_CNP_ 311  // cnp.
+#define STR_RES_CNPS 312  // cnps
+#define STR_RES_SWING 313  // swing
+#define STR_RES_SHUFFLE 314  // shuffle
+#define STR_RES_PUSH 315  // push
+#define STR_RES__LAG 316  // lag
+#define STR_RES_HUMAN 317  // human
+#define STR_RES_MONKEY 318  // monkey
+#define STR_RES_OSCILLATOR_1 319  // oscillator 1
+#define STR_RES_OSCILLATOR_2 320  // oscillator 2
+#define STR_RES_MIXER 321  // mixer
+#define STR_RES_LFO 322  // lfo
+#define STR_RES_FILTER_1 323  // filter 1
+#define STR_RES_FILTER_2 324  // filter 2
+#define STR_RES_ENVELOPE 325  // envelope
+#define STR_RES_ARPEGGIATOR 326  // arpeggiator
+#define STR_RES_MULTI 327  // multi
+#define STR_RES_CLOCK 328  // clock
+#define STR_RES_PERFORMANCE 329  // performance
+#define STR_RES_SYSTEM 330  // system
+#define STR_RES_PT_X_PATCH 331  // pt X patch
+#define STR_RES_PT_X_SEQUENCE 332  // pt X sequence
+#define STR_RES_PT_X_PROGRAM 333  // pt X program
+#define STR_RES_RANDOMIZE 334  // randomize
+#define STR_RES_INIT 335  // init
+#define STR_RES_PATCH 336  // PATCH
+#define STR_RES_SEQUENCE 337  // SEQUENCE
+#define STR_RES_PROGRAM 338  // PROGRAM
+#define STR_RES__MULTI 339  // MULTI
+#define STR_RES____ 340  // ___
+#define STR_RES_EQUAL 341  // equal
+#define STR_RES_JUST 342  // just
+#define STR_RES_PYTHAGOREAN 343  // pythagorean
+#define STR_RES_1_4_EB 344  // 1/4 eb
+#define STR_RES_1_4_E 345  // 1/4 e
+#define STR_RES_1_4_EA 346  // 1/4 ea
+#define STR_RES_BHAIRAV 347  // bhairav
+#define STR_RES_GUNAKRI 348  // gunakri
+#define STR_RES_MARWA 349  // marwa
+#define STR_RES_SHREE 350  // shree
+#define STR_RES_PURVI 351  // purvi
+#define STR_RES_BILAWAL 352  // bilawal
+#define STR_RES_YAMAN 353  // yaman
+#define STR_RES_KAFI 354  // kafi
+#define STR_RES_BHIMPALASREE 355  // bhimpalasree
+#define STR_RES_DARBARI 356  // darbari
+#define STR_RES_BAGESHREE 357  // bageshree
+#define STR_RES_RAGESHREE 358  // rageshree
+#define STR_RES_KHAMAJ 359  // khamaj
+#define STR_RES_MIMAL 360  // mi'mal
+#define STR_RES_PARAMESHWARI 361  // parameshwari
+#define STR_RES_RANGESHWARI 362  // rangeshwari
+#define STR_RES_GANGESHWARI 363  // gangeshwari
+#define STR_RES_KAMESHWARI 364  // kameshwari
+#define STR_RES_PA__KAFI 365  // pa. kafi
+#define STR_RES_NATBHAIRAV 366  // natbhairav
+#define STR_RES_M_KAUNS 367  // m.kauns
+#define STR_RES_BAIRAGI 368  // bairagi
+#define STR_RES_B_TODI 369  // b.todi
+#define STR_RES_CHANDRADEEP 370  // chandradeep
+#define STR_RES_KAUSHIK_TODI 371  // kaushik todi
+#define STR_RES_JOGESHWARI 372  // jogeshwari
+#define STR_RES_RASIA 373  // rasia
 #define LUT_RES_LFO_INCREMENTS 0
 #define LUT_RES_LFO_INCREMENTS_SIZE 128
 #define LUT_RES_SCALE_JUST 1

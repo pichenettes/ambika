@@ -305,6 +305,7 @@ mono
 poly
 2x unison
 cyclic
+chain
 
 up
 down
@@ -332,6 +333,7 @@ chord
 thru
 sequencer
 controllr
+chain
 full
 
 ....
