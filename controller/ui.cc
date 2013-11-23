@@ -274,9 +274,9 @@ void Ui::ShowPageRelative(int8_t increment) {
   int8_t current_page = page_info_.index;
   current_page += increment;
   if (current_page < 0) {
-    current_page = PAGE_PERFORMANCE;
+    current_page = PAGE_MULTI_CLOCK;
   }
-  if (current_page > PAGE_PERFORMANCE) {
+  if (current_page > PAGE_MULTI_CLOCK) {
     current_page = 0;
   }
   ShowPage(static_cast<UiPageNumber>(current_page));
