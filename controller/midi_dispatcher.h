@@ -266,6 +266,10 @@ class MidiDispatcher : public midi::MidiDevice {
     if (mode() < MIDI_OUT_CONTROLLER) {
       return;
     }
+    if (mode() == MIDI_OUT_CHAIN && address == 127 && value == 4) {
+      // Remap poly mode = chain to poly mode = poly.
+      value = 1;
+    }
     uint8_t channel = multi.part_channel(part);
     ++data_entry_counter_;
     if (current_parameter_address_ != address || data_entry_counter_ >= 32) {

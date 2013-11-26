@@ -26,7 +26,7 @@
 using namespace avrlib;
 
 namespace ambika {
-  
+
 static const prog_uint8_t midi_clock_tick_per_step[15] PROGMEM = {
   96, 72, 64, 48, 36, 32, 24, 16, 12, 8, 6, 4, 3, 2, 1
 };
