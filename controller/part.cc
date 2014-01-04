@@ -146,6 +146,11 @@ void Part::Touch() {
         address - sizeof(Patch),
         bytes[address]);
   }
+  
+  if (data_.polyphony_mode != polyphony_mode_) {
+    AllSoundOff();
+    InitializeAllocators();
+  }
 }
 
 void Part::TouchPatch() {
@@ -251,6 +256,7 @@ void Part::InitializeAllocators() {
         mono_allocator_.bytes(),
         mono_allocator_.bytes() + 12);
   }
+  polyphony_mode_ = data_.polyphony_mode;
 }
 
 void Part::TouchLfos() {

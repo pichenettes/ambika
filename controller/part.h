@@ -258,9 +258,9 @@ class Part {
   void UpdateLfos(uint8_t refresh_cycle);
   
   void AssignVoices(uint8_t allocation);
-
   inline uint8_t flags() const { return flags_; }
   inline void ClearFlag(uint8_t flag) { flags_ &= ~flag; }
+  
 
  private:
   void RandomizeRange(uint8_t start, uint8_t size);
@@ -333,6 +333,10 @@ class Part {
   
   // Whether some settings have been changed by code.
   uint8_t flags_;
+  
+  // Backup copy of the "polyphony mode" parameter to reinitialize if necessary
+  // all allocators when a new program is loaded.
+  uint8_t polyphony_mode_;
   
   DISALLOW_COPY_AND_ASSIGN(Part);
 };

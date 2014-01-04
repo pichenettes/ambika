@@ -34,7 +34,7 @@ const uint8_t kNumArpeggiatorPatterns = 22;
 const uint8_t kNumParts = 6;
 const uint8_t kNumVoices = 6;
 
-const uint8_t kSystemVersion = 0x01;
+const uint8_t kSystemVersion = 0x10;
 
 }  // namespace ambika
 
