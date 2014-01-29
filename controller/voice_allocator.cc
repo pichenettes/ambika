@@ -94,7 +94,9 @@ uint8_t VoiceAllocator::NoteOff(uint8_t note) {
       Touch(voice);
     }
   } else {
-    pool_[voice] = 0xff;
+    if (voice != 0xff) {
+      pool_[voice] = 0xff;
+    }
   }
   return voice;
 }
