@@ -356,6 +356,7 @@ void Part::NoteOff(uint8_t note) {
     // The sequencer and arpeggiator might still have pending notes. Release
     // them.
     if (pressed_keys_.size() == 0) {
+      ignore_note_off_messages_ = 0;
       AllNotesOff();
     }
   }
@@ -537,6 +538,9 @@ void Part::AllSoundOff() {
 }
 
 void Part::AllNotesOff() {
+  if (ignore_note_off_messages_) {
+    return;
+  }
   if (data_.polyphony_mode == MONO) {
     mono_allocator_.Clear();
   } else {
@@ -621,6 +625,7 @@ void Part::Start() {
 }
 
 void Part::Stop() {
+  ignore_note_off_messages_ = 0;
   AllNotesOff();
 }
 
