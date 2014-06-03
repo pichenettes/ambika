@@ -36,6 +36,8 @@
 #ifndef CONTROLLER_NOTE_STACK_H_
 #define CONTROLLER_NOTE_STACK_H_
 
+#include <string.h>
+
 #include "avrlib/base.h"
 
 namespace ambika {

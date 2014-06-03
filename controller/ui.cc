@@ -242,6 +242,10 @@ void Ui::Poll() {
     }
   }
   
+  if (!(cycle_ & 7)) {
+    display.BlinkCursor();
+  }
+  
   pots_.Read();
   uint8_t index = pots_.last_read();
   uint16_t value = pots_.value(index);
