@@ -28,7 +28,7 @@ namespace ambika {
 static const prog_char str_res_dummy[] PROGMEM = "dummy";
 
 
-PROGMEM const prog_char* string_table[] = {
+PROGMEM const prog_char* const string_table[] = {
   str_res_dummy,
 };
 
@@ -211,7 +211,7 @@ const prog_uint16_t lut_res_cz_phase_reset[] PROGMEM = {
 };
 
 
-PROGMEM const prog_uint16_t* lookup_table_table[] = {
+PROGMEM const prog_uint16_t* const lookup_table_table[] = {
   lut_res_lfo_increments,
   lut_res_env_portamento_increments,
   lut_res_oscillator_increments,
@@ -2297,7 +2297,7 @@ const prog_uint8_t wav_res_wavetables[] PROGMEM = {
 };
 
 
-const prog_uint8_t* waveform_table[] = {
+const prog_uint8_t* const waveform_table[] = {
   wav_res_formant_sine,
   wav_res_formant_square,
   wav_res_sine,

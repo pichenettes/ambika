@@ -375,7 +375,7 @@ static const prog_char str_res_jogeshwari[] PROGMEM = "jogeshwari";
 static const prog_char str_res_rasia[] PROGMEM = "rasia";
 
 
-PROGMEM const prog_char* string_table[] = {
+PROGMEM const prog_char* const string_table[] = {
   str_res_waveform,
   str_res_parameter,
   str_res_range,
@@ -921,7 +921,7 @@ const prog_uint16_t lut_res_groove_monkey[] PROGMEM = {
 };
 
 
-PROGMEM const prog_uint16_t* lookup_table_table[] = {
+PROGMEM const prog_uint16_t* const lookup_table_table[] = {
   lut_res_lfo_increments,
   lut_res_scale_just,
   lut_res_scale_pythagorean,
@@ -975,7 +975,7 @@ const prog_uint8_t chr_res_special_characters[] PROGMEM = {
 };
 
 
-const prog_uint8_t* character_table[] = {
+const prog_uint8_t* const character_table[] = {
   chr_res_special_characters,
 };
 
@@ -1497,7 +1497,7 @@ const prog_uint8_t wav_res_lfo_waveforms[] PROGMEM = {
 };
 
 
-const prog_uint8_t* waveform_table[] = {
+const prog_uint8_t* const waveform_table[] = {
   wav_res_lfo_waveforms,
 };
 
