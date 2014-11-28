@@ -298,6 +298,11 @@ void Ui::DoEvents() {
   while (queue_.available()) {
     Event e = queue_.PullEvent();
     queue_.Touch();
+    redraw = 1;
+    if (e.control_type == 0x3 && e.control_id == 0x3f && e.value == 0xff) {
+      // Dummy event, continue
+      continue;
+    }
     switch (e.control_type) {
       case CONTROL_ENCODER_CLICK:
         (*event_handlers_.OnClick)();
@@ -329,7 +334,6 @@ void Ui::DoEvents() {
         (*event_handlers_.OnPot)(e.control_id, e.value);
         break;
     }
-    redraw = 1;
   }
   
   if (queue_.idle_time_ms() > 800) {

@@ -193,7 +193,7 @@ class Ui {
   static uint8_t OnNote(uint8_t note, uint8_t velocity) {
     if (event_handlers_.OnNote && \
           (*event_handlers_.OnNote)(note, velocity)) {
-      queue_.AddEvent(CONTROL_REFRESH, 0, 0);
+      queue_.AddEvent(0x3, 0x3f, 0xff);
       return 1;
     }
     return 0;
