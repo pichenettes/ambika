@@ -792,7 +792,7 @@ void Storage::SysExAcceptCommand() {
       break;
       
     case 0x16:
-      SysExSendAllCCs(location.part);
+      SendAllCCs(location.part);
       break;
       
     case 0x1f:
