@@ -29,6 +29,7 @@
 #include "controller/multi.h"
 #include "controller/system_settings.h"
 #include "controller/ui.h"
+#include "controller/parameter.h"
 
 namespace ambika {
 
@@ -226,6 +227,46 @@ uint8_t Storage::has_user_changes(const StorageLocation& location) {
   } else {
     return multi.part(location.part).flags() & FLAG_HAS_USER_CHANGE;
   }
+}
+
+/* static */
+void Storage::SendAllCCs(uint8_t part)
+{
+  //uint_8 part = location.part;
+  uint8_t midi_channel;
+  const Parameter& parameter = parameter_manager.parameter(59);
+  if (parameter.offset != PRM_MULTI_MIDI_CHANNEL) return;
+  uint8_t instance_index = 0;
+  
+  //for (instance_index = 0;
+  //     instance_index < parameter.num_instances && instance_index < part;
+  //     ++instance_index) {
+  //}
+  
+  instance_index = part;
+  midi_channel = parameter_manager.GetValue(parameter, ui.state().active_part, instance_index);
+  if (midi_channel>0) --midi_channel; // why but why?
+  
+  for (uint8_t index=0; index<kNumParameters; ++index) {
+    const Parameter& parameter = parameter_manager.parameter(index);
+    uint8_t midi_cc = parameter.midi_cc;
+    
+    if(parameter.level==PARAMETER_LEVEL_PATCH || parameter.level==PARAMETER_LEVEL_PART) {
+      // Some ranges of MIDI CC might point to the same parameter ID, for
+      // different instances of the same object (for example a LFO).
+      //uint8_t instance_index = 0;
+      for (instance_index = 0;
+	   instance_index < parameter.num_instances;
+	   ++instance_index) {
+	
+	uint8_t value = parameter_manager.GetValue(parameter, part, instance_index);
+	//if ( (midi_cc < 1) || (midi_cc > 120)) continue;
+	midi_dispatcher.Send3(0xb0 | midi_channel, midi_cc, value & 0x7f);
+	midi_cc += parameter.stride;
+	midi_dispatcher.Flush();
+      }
+    }
+  } 
 }
 
 /* static */
@@ -693,6 +734,7 @@ void Storage::SysExParseCommand() {
     case 0x13:
     case 0x14:
     case 0x15:
+    case 0x16:
       // Request commands have no data.
       sysex_rx_expected_size_ = 0;
       break;
@@ -747,6 +789,10 @@ void Storage::SysExAcceptCommand() {
     case 0x15:
       location.object = static_cast<StorageObject>(sysex_rx_command_[0] - 0x11);
       SysExSend(location);
+      break;
+      
+    case 0x16:
+      SysExSendAllCCs(location.part);
       break;
       
     case 0x1f:

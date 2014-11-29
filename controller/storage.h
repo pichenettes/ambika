@@ -101,6 +101,8 @@ class Storage {
     ForEachObject(location, &SysExSendObject);
   }
   
+  static void SendAllCCs(uint8_t part);
+  
   static FilesystemStatus Snapshot(const StorageLocation& location);
   static FilesystemStatus PreviousVersion(const StorageLocation& location);
   static FilesystemStatus NextVersion(const StorageLocation& location);
