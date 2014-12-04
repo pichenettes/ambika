@@ -681,7 +681,7 @@ void Part::InternalNoteOn(uint8_t note, uint8_t velocity) {
     retrigger_lfos = !legato || !data_.legato;
   } else {
     // Prevent the same note to be allocated twice on two different voices.
-    uint8_t voice_index = poly_allocator_.Find(note);
+    uint8_t voice_index = poly_allocator_.FindActive(note);
     if (voice_index == 0xff) {
       voice_index = poly_allocator_.NoteOn(note);
     }

@@ -38,6 +38,8 @@ class VoiceAllocator {
   uint8_t NoteOn(uint8_t note);
   uint8_t NoteOff(uint8_t note);
   uint8_t Find(uint8_t note) const;
+  uint8_t FindActive(uint8_t note) const;
+  
   void Clear();
   void ClearNotes();
   uint8_t size() const { return size_; }

@@ -86,6 +86,15 @@ uint8_t VoiceAllocator::Find(uint8_t note) const {
   return 0xff;
 }
 
+uint8_t VoiceAllocator::FindActive(uint8_t note) const {
+  for (uint8_t i = 0; i < size_; ++i) {
+    if ((pool_[i] & 0x7f) == note && (pool_[i] & 0x80)) {
+      return i;
+    }
+  }
+  return 0xff;
+}
+
 uint8_t VoiceAllocator::NoteOff(uint8_t note) {
   uint8_t voice = Find(note);
   if (cyclic_allocator_ == 0xff) {
