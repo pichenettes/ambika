@@ -6,7 +6,7 @@ The motherboard comprises 6 audio outputs, each one connected to a voicecard ; a
 
 3 designs of voicecards implementing a refined version of the Shruthi-1 engine are provided. Each of those use a different filter (4-Pole with LM13700, 4-Pole with SSM2164, 2-Pole SVF with SSM2164).
 
-Original developer: Olivier Gillet (olivier@mutable-instruments.net)
+Original developer: Emilie Gillet (emilie.o.gillet@gmail.com)
 
 The firmware is released under a GPL3.0 license. It includes a variant of the formant synthesis algorithm used in Peter Knight's Cantarino speech synthesizer.
 
