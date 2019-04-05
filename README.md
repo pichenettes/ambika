@@ -1,4 +1,4 @@
-#Ambika
+# Ambika
 ## A hybrid MIDI polysynth and voicecard host.
 
 Ambika consists of a compact motherboard serving as a "host" for up to 6 sound synthesis voicecard. While this design is primarily intended to be a flexible hybrid polysynth, it could also be used as a drum module/drum machine.
@@ -13,7 +13,7 @@ The firmware is released under a GPL3.0 license. It includes a variant of the fo
 
 The PCB layouts and schematics, documentation, analyses, simulations and 3D models are released under a Creative Commons cc-by-sa 3.0 license.
 
-# BUILD
+# Build
 
 You'll need:
 - make
@@ -32,14 +32,13 @@ Next, you'll need to grab the projects this repo depends on.
     git submodule update --init
 ```
 
-Once you've got that all settled, you'll need to change the path to `avr-gcc` in avrlib/makefile.mk.
+Once you've got that all settled, you'll need to change the path to `avr-gcc` in avrlib/makefile.mk
+to match the path on your system.
 
 ```
-    #remeber the path given by this command
-    which avr-gcc
-
-    <your editor of choice> avrlib/makefile.mk
-    replace the old path in the line 'AVRLIB_TOOLS_PATH ?= <oldpath>' with the output from "which avr-gcc" you got above
+    export AVRPATH=`which avr-gcc`
+    sed "s|AVRLIB_TOOLS_PATH ?=.*|AVRLIB_TOOLS_PATH \?= `dirname $AVRPATH`|" avrlib/makefile.mk > mkfiletmp
+    mv mkfiletmp avrlib/makefile.mk
 ```
 
 Finally, run `make`
