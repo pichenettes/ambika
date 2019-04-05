@@ -41,4 +41,4 @@ to match the path on your system.
     mv mkfiletmp avrlib/makefile.mk
 ```
 
-Finally, run `make`
+Finally, run `make`.
