@@ -37,8 +37,17 @@ to match the path on your system.
 
 ```
     export AVRPATH=`which avr-gcc`
-    sed "s|AVRLIB_TOOLS_PATH ?=.*|AVRLIB_TOOLS_PATH \?= `dirname $AVRPATH`|" avrlib/makefile.mk > mkfiletmp
+    sed "s|AVRLIB_TOOLS_PATH ?=.*|AVRLIB_TOOLS_PATH \?= `dirname $AVRPATH`/|" avrlib/makefile.mk > mkfiletmp
     mv mkfiletmp avrlib/makefile.mk
 ```
 
-Finally, run `make`.
+Then, for `elf` files:
+
+```
+make all
+```
+
+And for `bin` files:
+```
+make bin
+```
