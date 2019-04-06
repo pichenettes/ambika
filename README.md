@@ -41,13 +41,23 @@ to match the path on your system.
     mv mkfiletmp avrlib/makefile.mk
 ```
 
-Then, for `elf` files:
+Then, for voice card `elf` files:
 
 ```
-make all
+    make all
 ```
 
-And for `bin` files:
+And for voice card `bin` files:
 ```
-make bin
+    make bin
+```
+
+For motherboard `elf` files:
+```
+    make bootstrap_controller
+```
+
+For motherboard `bin` files:
+```
+    make -f controller/makefile bin
 ```
