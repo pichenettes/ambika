@@ -1,4 +1,5 @@
-Ambika, a hybrid MIDI polysynth and voicecard host.
+# Ambika
+## A hybrid MIDI polysynth and voicecard host.
 
 Ambika consists of a compact motherboard serving as a "host" for up to 6 sound synthesis voicecard. While this design is primarily intended to be a flexible hybrid polysynth, it could also be used as a drum module/drum machine.
 
@@ -11,3 +12,52 @@ Original developer: Emilie Gillet (emilie.o.gillet@gmail.com)
 The firmware is released under a GPL3.0 license. It includes a variant of the formant synthesis algorithm used in Peter Knight's Cantarino speech synthesizer.
 
 The PCB layouts and schematics, documentation, analyses, simulations and 3D models are released under a Creative Commons cc-by-sa 3.0 license.
+
+# Build
+
+You'll need:
+- make
+- gcc-avr
+- avr-libc
+- avrdude
+- python
+
+On Ubuntu:
+```
+    sudo apt-get install gcc-avr make avr-libc
+```
+
+Next, you'll need to grab the projects this repo depends on.
+```
+    git submodule update --init
+```
+
+Once you've got that all settled, you'll need to change the path to `avr-gcc` in avrlib/makefile.mk
+to match the path on your system.
+
+```
+    export AVRPATH=`which avr-gcc`
+    sed "s|AVRLIB_TOOLS_PATH ?=.*|AVRLIB_TOOLS_PATH \?= `dirname $AVRPATH`/|" avrlib/makefile.mk > mkfiletmp
+    mv mkfiletmp avrlib/makefile.mk
+```
+
+Then, for voice card `elf` files:
+
+```
+    make all
+```
+
+And for voice card `bin` files:
+```
+    make bin
+```
+
+For motherboard `elf` files:
+```
+    make bootstrap_controller
+```
+
+For motherboard `bin` files:
+```
+    make -f controller/makefile bin
+```
