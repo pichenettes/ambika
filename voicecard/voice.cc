@@ -39,10 +39,10 @@ TransientGenerator transient_generator;
 
 /* <static> */
 
-uint8_t Voice::patch_data_[1];
 Patch Voice::patch_;
-uint8_t Voice::part_data_[1];
+uint8_t *Voice::patch_data_ = reinterpret_cast<uint8_t*> (&Voice::patch_);
 Part Voice::part_;
+uint8_t *Voice::part_data_ = reinterpret_cast<uint8_t*> (&Voice::part_);
 
 Lfo Voice::voice_lfo_;
 Envelope Voice::envelope_[kNumEnvelopes];
@@ -103,11 +103,6 @@ static const prog_Patch init_patch PROGMEM = {
   // Padding
   0, 0, 0, 0, 0, 0, 0, 0,
 };
-
-/* static */
-void Voice::set_patch_data(uint8_t address, uint8_t value) {
-  patch_data_[address + 1] = value;
-}
 
 /* static */
 void Voice::Init() {
