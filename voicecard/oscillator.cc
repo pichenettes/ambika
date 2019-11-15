@@ -307,7 +307,7 @@ void Oscillator::RenderVowel(uint8_t* buffer) {
     }
     
     // Interpolate formant amplitudes.
-    for (uint8_t i = 0; i < 4; ++i) {
+    for (uint8_t i = 0; i < 3; ++i) {
       uint8_t amplitude_a = ResourcesManager::Lookup<uint8_t, uint8_t>(
           wav_res_vowel_data,
           offset_1 + 3 + i);
