@@ -45,7 +45,8 @@ class TransientGenerator {
     while (counter_ && size--) {
       uint8_t value = (*fn)();
       uint8_t amplitude = U8U8MulShift8(gain_, amount);
-      *buffer++ = U8Mix(*buffer, value, amplitude);
+      *buffer = U8Mix(*buffer, value, amplitude);
+      ++buffer;
     }
   }
   
