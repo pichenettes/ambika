@@ -307,6 +307,7 @@ void Oscillator::RenderVowel(uint8_t* buffer) {
     }
     
     // Interpolate formant amplitudes.
+    // formant_amplitude[3] is an alias of noise_modulation
     for (uint8_t i = 0; i < 4; ++i) {
       uint8_t amplitude_a = ResourcesManager::Lookup<uint8_t, uint8_t>(
           wav_res_vowel_data,
